@@ -8,8 +8,8 @@ Designed and implemented an application to live track stock prices and alert use
 
 ### Stock Tracking
 
-...
+(insert here)
 
 ### Price Alert
 
-...
+(insert here)
