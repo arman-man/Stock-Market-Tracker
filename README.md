@@ -12,4 +12,4 @@ Designed and implemented an application to live track stock prices and alert use
 
 ### Price Alert
 
-<img width="671" alt="image" src="https://user-images.githubusercontent.com/84875686/215645450-0fc7d4f9-3bce-4ee5-a996-6415216af7c4.png">
+...
