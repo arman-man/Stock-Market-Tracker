@@ -9,7 +9,7 @@ from threading import Thread
 # Green for menus
 # Cyan for prompts
 # Red for responses
-# White for loading/processes
+# White for loading/processes/user-input
 
 run_loop = True
 
@@ -34,8 +34,9 @@ def writeFile(ticker: str):
 
 
 def trigger_alert(stockTicker, alertPrice):
+    print('\r' + '                                        ')
     print(colored.red(
-        '\n\nALERT! ' + stockTicker + ' has reached $ ' + str(alertPrice)))
+        'ALERT! ' + stockTicker + ' has reached $ ' + str(alertPrice)))
 
     pymsgbox.alert(stockTicker + ' has reached $ ' + str(alertPrice), 'Stock alert '
                                                                       'triggered!')
@@ -50,7 +51,7 @@ def stock_price_script(stockTicker, alertPrice):
         alertStatus = True
         print('\nTracking ' + stockTicker + '...')
         while alertStatus is True and run_loop is True:
-            time.sleep(3)
+            time.sleep(4)
             stockPrice = readFile()
 
             if run_loop is True:
@@ -66,7 +67,7 @@ def stock_price_script(stockTicker, alertPrice):
         alertStatus = True
         print('\nTracking ' + stockTicker + '...')
         while alertStatus is True and run_loop is True:
-            time.sleep(3)
+            time.sleep(4)
             stockPrice = readFile()
 
             if run_loop is True:
@@ -136,7 +137,7 @@ if __name__ == "__main__":
 
             print()
             for i in progress.mill(range(100), label='Loading...'):
-                time.sleep(3 / 100)
+                time.sleep(3 / 75)
 
             stockPrice = readFile()
 
@@ -172,7 +173,7 @@ if __name__ == "__main__":
 
             print()
             for i in progress.mill(range(100), label='Loading...'):
-                time.sleep(3 / 100)
+                time.sleep(3 / 75)
 
             stockPrice = readFile()
 
