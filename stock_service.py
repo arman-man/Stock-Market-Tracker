@@ -2,14 +2,11 @@
 import requests
 from bs4 import BeautifulSoup
 import time
+import zmq
 
-
-def main():
-    while True:
-        time.sleep(1)
-        line = readFile()
-        price = getStockPrice(line)
-        writeFile(price)
+context = zmq.Context()
+socket = context.socket(zmq.REP)
+socket.bind("tcp://*:5555")
 
 
 def getStockPrice(ticker: str):
@@ -22,23 +19,15 @@ def getStockPrice(ticker: str):
         return '-1'
 
 
-def readFile():
-    # Open the txt file in read mode
-    file = open('C:\\Users\\amanu\\OneDrive\\Documents\\Programming '
-                'Projects\\Stock-Market-Tracker\\stock_service_ticker.txt', 'rt')
-    # Save the first line in the txt file, which should be a stock ticker
-    tempVar = file.readline()
-    file.close()
-    return tempVar
+if __name__ == '__main__':
+    while True:
+        time.sleep(1)
+        #  Wait for next request from client
+        message = socket.recv()
+        stockTicker = str(message.decode())
 
+        #  Do some 'work'
+        stockPrice = getStockPrice(stockTicker)
 
-def writeFile(price: str):
-    # Re-open txt file in write mode
-    file = open('C:\\Users\\amanu\\OneDrive\\Documents\\Programming '
-                'Projects\\Stock-Market-Tracker\\stock_service_price.txt', 'wt')
-    # Generate stock price or '-1' and save to txt file
-    file.write(price)
-    file.close()
-
-
-main()
+        #  Send reply to client
+        socket.send_string(stockPrice)

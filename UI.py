@@ -1,4 +1,5 @@
 import pymsgbox  # Alert pop-up
+import zmq
 from clint.textui import colored, progress  # CLI text
 from pyfiglet import Figlet  # CLI title
 import time
@@ -13,24 +14,20 @@ from threading import Thread
 
 run_loop = True
 
-
-def readFile():
-    # Open the txt file in read mode
-    file = open('C:\\Users\\amanu\\OneDrive\\Documents\\Programming '
-                'Projects\\Stock-Market-Tracker\\stock_service_price.txt', 'rt')
-    # Save the first line in the txt file, which should be a stock ticker
-    tempVar = file.readline()
-    file.close()
-    return tempVar
+context = zmq.Context()
+#  Socket to talk to server
+socket = context.socket(zmq.REQ)
+socket.connect("tcp://localhost:5555")
 
 
-def writeFile(ticker: str):
-    # Re-open txt file in write mode
-    file = open('C:\\Users\\amanu\\OneDrive\\Documents\\Programming '
-                'Projects\\Stock-Market-Tracker\\stock_service_ticker.txt', 'wt')
-    # Generate stock price or '-1' and save to txt file
-    file.write(ticker)
-    file.close()
+def stock_service_request(stockTicker):
+    socket.send_string(stockTicker)
+
+    #  Get the reply.
+    message = socket.recv()
+
+    stockPrice = str(message.decode())
+    return stockPrice
 
 
 def trigger_alert(stockTicker, alertPrice):
@@ -46,13 +43,14 @@ def trigger_alert(stockTicker, alertPrice):
 
 def stock_price_script(stockTicker, alertPrice):
     global run_loop
-    stockPrice = readFile()
+    stockPrice = stock_service_request(stockTicker)
+
     if float(stockPrice) < float(alertPrice):
         alertStatus = True
         print('\nTracking ' + stockTicker + '...')
         while alertStatus is True and run_loop is True:
-            time.sleep(4)
-            stockPrice = readFile()
+            time.sleep(3)
+            stockPrice = stock_service_request(stockTicker)
 
             if run_loop is True:
                 print('\r' + stockPrice + (' ' * 35))
@@ -67,8 +65,8 @@ def stock_price_script(stockTicker, alertPrice):
         alertStatus = True
         print('\nTracking ' + stockTicker + '...')
         while alertStatus is True and run_loop is True:
-            time.sleep(4)
-            stockPrice = readFile()
+            time.sleep(3)
+            stockPrice = stock_service_request(stockTicker)
 
             if run_loop is True:
                 print('\r' + stockPrice + (' ' * 35))
@@ -133,13 +131,11 @@ if __name__ == "__main__":
             print(colored.cyan('\nEnter a stock to track:\n>'), end='')
             stockTicker = input().upper()
 
-            writeFile(stockTicker)
+            stockPrice = stock_service_request(stockTicker)
 
             print()
             for i in progress.mill(range(100), label='Loading...'):
-                time.sleep(3 / 75)
-
-            stockPrice = readFile()
+                time.sleep(3 / 100)
 
             # This means the stock exists
             if stockPrice != '-1':
@@ -169,13 +165,11 @@ if __name__ == "__main__":
             print(colored.cyan('\nEnter a stock to look up:\n>'), end='')
             stockTicker = input().upper()
 
-            writeFile(stockTicker)
+            stockPrice = stock_service_request(stockTicker)
 
             print()
             for i in progress.mill(range(100), label='Loading...'):
-                time.sleep(3 / 75)
-
-            stockPrice = readFile()
+                time.sleep(3 / 100)
 
             # This means the stock exists
             if stockPrice != '-1':
