@@ -5,7 +5,7 @@ Implemented a web-scraper microservice to get necessary stock data.
 
 Utilized multithreading to simultaneously run microservice process and receive user-input.
 
-Using ZeroMQ asynchronous messaging library for message queue between microservice (stock_service.py) and client (UI.py).
+Using ZeroMQ asynchronous messaging library for message queue between microservice and client.
 
 ### Main Menu
 <img width="674" alt="image" src="https://user-images.githubusercontent.com/84875686/215644283-9f07a7d2-8fe3-4630-85c0-ce4d62cdca78.png">
