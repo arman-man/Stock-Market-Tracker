@@ -44,8 +44,10 @@ def trigger_alert(stockTicker, alertPrice):
 def stock_price_script(stockTicker, alertPrice):
     global run_loop
     stockPrice = stock_service_request(stockTicker)
+    initialAlertPrice = float(alertPrice)
+    initialStockPrice = float(stockPrice)
 
-    if float(stockPrice) < float(alertPrice):
+    if initialStockPrice != initialAlertPrice:
         alertStatus = True
         print('\nTracking ' + stockTicker + '...')
         while alertStatus is True and run_loop is True:
@@ -56,26 +58,16 @@ def stock_price_script(stockTicker, alertPrice):
                 print('\r' + stockPrice + (' ' * 35))
                 print(colored.cyan('Enter \'3\' to return to main menu >'), flush=True, end='')
 
-            if float(stockPrice) >= float(alertPrice):
-                trigger_alert(stockTicker, alertPrice)
-                run_loop = False
-                alertStatus = False
-
-    elif float(stockPrice) > float(alertPrice):
-        alertStatus = True
-        print('\nTracking ' + stockTicker + '...')
-        while alertStatus is True and run_loop is True:
-            time.sleep(3)
-            stockPrice = stock_service_request(stockTicker)
-
-            if run_loop is True:
-                print('\r' + stockPrice + (' ' * 35))
-                print(colored.cyan('Enter \'3\' to return to main menu >'), flush=True, end='')
-
-            if float(stockPrice) <= float(alertPrice):
-                trigger_alert(stockTicker, alertPrice)
-                run_loop = False
-                alertStatus = False
+            if initialStockPrice < initialAlertPrice:
+                if float(stockPrice) >= float(alertPrice):
+                    trigger_alert(stockTicker, alertPrice)
+                    run_loop = False
+                    alertStatus = False
+            else:
+                if float(stockPrice) <= float(alertPrice):
+                    trigger_alert(stockTicker, alertPrice)
+                    run_loop = False
+                    alertStatus = False
     else:
         print('\nTracking ' + stockTicker + '...')
         print('\r' + stockPrice + (' ' * 35))
