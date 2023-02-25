@@ -1,5 +1,5 @@
 import pymsgbox  # Alert pop-up
-import zmq
+import zmq  # Async Messaging Library
 from clint.textui import colored, progress  # CLI text
 from pyfiglet import Figlet  # CLI title
 import time
