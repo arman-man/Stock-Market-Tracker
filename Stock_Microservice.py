@@ -20,7 +20,7 @@ def getStockPrice(ticker: str):
 
 
 if __name__ == '__main__':
-    print('Microservice running...')
+    print('Microservice running...', end='', flush=True)
     while True:
         time.sleep(1)
         #  Wait for next request from client
