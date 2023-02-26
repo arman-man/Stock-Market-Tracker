@@ -96,6 +96,7 @@ def start_scripts(stockTicker, alertPrice):
     t2 = Thread(target=input_script)
     t2.start()
 
+    # Allow scripts to run until run_loop is turned off by either thread
     while run_loop is True:
         pass
 
